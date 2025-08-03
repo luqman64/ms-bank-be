@@ -73,7 +73,7 @@ function fetchFundTrxList(custId, accNo, desc, pageNo1) {
     };
 
     $.ajax({
-        url: '/bank-api/getFundList',
+        url: '/bank-app/getFundList',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(request),
@@ -92,7 +92,7 @@ function fetchFundTrxList(custId, accNo, desc, pageNo1) {
                                 <td>${fund.trxDate}</td>
                                 <td>${fund.trxTime}</td>
                                 <td>${fund.customerId}</td>
-                                <td><a href="/bank-api/update/${fund.id}">Update</a></td>
+                                <td><a href="/bank-app/update/${fund.id}">Update</a></td>
                             </tr>`;
                         tbody.append(row);
                     });

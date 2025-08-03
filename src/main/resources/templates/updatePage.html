@@ -48,7 +48,7 @@ $(document).ready(function () {
         $('input[name=\'description\']').val());
     })
     $('.back').click(function() {
-        window.location.href = "/bank-api";
+        window.location.href = "/bank-app";
     })
 });
 
@@ -58,7 +58,7 @@ function updateDesc(id, desc) {
         description: desc
     };
     $.ajax({
-        url: '/bank-api/updateFundById',
+        url: '/bank-app/updateFundById',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(request),
