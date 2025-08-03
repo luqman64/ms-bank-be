@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bank App</title>
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+</head>
+<body>
+<h1>Bank App</h1>
+<b>Main Page</b>
+<p>List of fund transactions:</p>
+
+<table>
+    <tbody>
+        <tr>
+            <td>Customer Id:</td>
+            <td colspan="2"><input type="text" name="customerId" size="25"/></td>
+        </tr>
+        <tr>
+            <td>Account Number:</td>
+            <td colspan="2"><input type="text" name="accountNumber" size="25"/></td>
+        </tr>
+        <tr>
+            <td>Description:</td>
+            <td><input type="text" name="description" size="40"/></td>
+            <td><button class="search">Search</button></td>
+        </tr>
+    </tbody>
+</table>
+
+<p></p>
+
+<table id="fundTable" border="1">
+    <thead>
+        <tr>
+            <th>Transaction Id</th>
+            <th>Account Number</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Customer Id</th>
+            <th>Update</th>
+        </tr>
+    </thead>
+    <tbody id="trxBody">
+    </tbody>
+</table>
+<div id="pagination-controls" style="margin-top: 1rem;"></div>
+
+<script>
+$(document).ready(function () {
+    fetchFundTrxList('','','',0);
+
+    $('button.search').click(function() {
+        fetchCurrFields(0);
+    });
+});
+
+function fetchCurrFields(pageNo) {
+    var custId = $('input[name=\'customerId\']').val();
+    var accNo = $('input[name=\'accountNumber\']').val();
+    var desc = $('input[name=\'description\']').val();
+    fetchFundTrxList(custId, accNo, desc, pageNo);
+}
+
+function fetchFundTrxList(custId, accNo, desc, pageNo1) {
+    var request = {
+        customerId: custId,
+        accountNumber: accNo,
+        description: desc,
+        pageNo: pageNo1,
+        pageSize: 10
+    };
+
+    $.ajax({
+        url: '/bank-api/getFundList',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(request),
+            success: function (response) {
+                const tbody = $('#fundTable tbody');
+                tbody.empty();
+
+                if (response.fundTrxList && response.fundTrxList.length > 0) {
+                    response.fundTrxList.forEach(fund => {
+                        const row = `
+                            <tr>
+                                <td>${fund.id}</td>
+                                <td>${fund.accountNumber}</td>
+                                <td>${fund.trxAmount}</td>
+                                <td>${fund.description}</td>
+                                <td>${fund.trxDate}</td>
+                                <td>${fund.trxTime}</td>
+                                <td>${fund.customerId}</td>
+                                <td><a href="/bank-api/update/${fund.id}">Update</a></td>
+                            </tr>`;
+                        tbody.append(row);
+                    });
+                } else {
+                    tbody.append('<tr><td colspan="7">No data</td></tr>');
+                }
+
+                // Generate pagination
+                generatePagination(response.totalpage, response.pageNo);
+            },
+            error: function (xhr) {
+                console.error("Error:", xhr.responseText);
+                alert("Failed to fetch fund list.");
+            }
+    });
+}
+
+function generatePagination(totalPages, currentPage) {
+    var pagination = $('#pagination-controls');
+    pagination.empty();
+
+    for (let i = 0; i < totalPages; i++) {
+        var activeClass = i === currentPage ? 'style="font-weight: bold;"' : '';
+        var btn = `<button class="page-btn" data-page="${i}" ${activeClass}>${i + 1}</button>`;
+        pagination.append(btn);
+    }
+
+    $('.page-btn').on('click', function () {
+        var pageNo = $(this).data('page');
+        fetchCurrFields(pageNo);
+    });
+}
+</script>
+
+</body>
+</html>

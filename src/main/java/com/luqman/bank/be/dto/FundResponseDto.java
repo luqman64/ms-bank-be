@@ -12,6 +12,7 @@ public class FundResponseDto {
 
     private Integer pageSize;
     private Integer pageNo;
+    private Integer totalpage;
     private List<FundTrx> fundTrxList;
 
 }

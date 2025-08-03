@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bank App</title>
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+</head>
+<body>
+<h1>Bank App</h1>
+<b>Update Page</b>
+<p>Update fund transaction description:</p>
+
+<table>
+    <tbody>
+        <input type="hidden" name="id" th:value="${fundTrx.id}"/>
+        <tr>
+            <td>Customer Id:</td>
+            <td><span th:text="${fundTrx.customerId}"></span></td>
+        </tr>
+        <tr>
+            <td>Account Number:</td>
+            <td><span th:text="${fundTrx.accountNumber}"></span></td>
+        </tr>
+        <tr>
+            <td>Amount:</td>
+            <td><span th:text="${fundTrx.trxAmount}"></span></td>
+        </tr>
+        <tr>
+            <td>Date and time:</td>
+            <td><span th:text="${fundTrx.trxDate}"></span> <span th:text="${fundTrx.trxTime}"></span></td>
+        </tr>
+        <tr>
+            <td>Description:</td>
+            <td><input type="text" name="description" size="40" th:value="${fundTrx.description}"/></td>
+        </tr>
+    </tbody>
+</table>
+
+<p>
+<button class="update">Update</button>
+<button class="back">Back</button>
+</p>
+
+
+<script>
+$(document).ready(function () {
+    $('.update').click(function() {
+        updateDesc($('input[name=\'id\']').val(),
+        $('input[name=\'description\']').val());
+    })
+    $('.back').click(function() {
+        window.location.href = "/bank-api";
+    })
+});
+
+function updateDesc(id, desc) {
+    var request = {
+        id: id,
+        description: desc
+    };
+    $.ajax({
+        url: '/bank-api/updateFundById',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(request),
+            success: function (response) {
+                alert('Value updated to ' + desc);
+            },
+            error: function (xhr) {
+                console.error("Error:", xhr.responseText);
+                alert("Failed to fetch fund list.");
+            }
+    });
+}
+</script>
+
+</body>
+</html>

@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -30,8 +29,9 @@ public class FundServiceImpl implements FundService {
                 fundRequestDto.getDescription(), PageRequest.of(fundRequestDto.getPageNo(), fundRequestDto.getPageSize()));
         FundResponseDto fundResponseDto = new FundResponseDto();
         fundResponseDto.setFundTrxList(new ArrayList<>(fundTrx.getContent()));
-        fundResponseDto.setPageSize(fundTrx.getPageable().getPageSize());
         fundResponseDto.setPageNo(fundTrx.getPageable().getPageNumber());
+        fundResponseDto.setPageSize(fundTrx.getPageable().getPageSize());
+        fundResponseDto.setTotalpage(fundTrx.getTotalPages());
         return fundResponseDto;
     }
 
