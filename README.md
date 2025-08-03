@@ -1,6 +1,6 @@
 # Bank App
 
-Application developed by Luqman Nul Hakim as part of the Maybank technical assessment.
+Application developed by Luqman Nul Hakim as part of the Maybank technical assessment. This application uses the MVC design pattern as I'm quite experience with it and it allows for faster and more structured development.
 
 ### Features
 - Update description field.
